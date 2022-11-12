@@ -4,7 +4,7 @@ The software associated with the CPSS FAR 10K rocket competition project titled 
 This project uses PlatformIO
 
 # Design rules:
-- #Comments
+## Comments:
 -   Write understandable comments. they don't need to be pretty. Write the comments you would want to read if you had never seen your code before.  
 -   Comments are strongly reccomended for these areas:
   -   Beggining of file (explain what the file is for)
