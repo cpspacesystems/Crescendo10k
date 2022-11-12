@@ -40,5 +40,7 @@ This project uses PlatformIO
 - Fetch and merge from the remote again (in case new commits were made, make sure your feature still works with the current production)
 - Push branch up to the remote
 
-
+## Helpful Links:
+- Codecademy page on git collaboration: https://www.codecademy.com/learn/learn-git/modules/learn-git-git-teamwork-u/cheatsheet
+- Git/GitHub cheat sheet: https://education.github.com/git-cheat-sheet-education.pdf
 
