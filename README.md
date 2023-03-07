@@ -47,3 +47,6 @@ This project uses PlatformIO
 - Places to look for sensor-specific Arduino libraries (note--these are meant for ARDUINO boards and *may* not always work for Teensy 4.1): https://reference.arduino.cc/reference/en/libraries/category/sensors/ 
 - A (Teensy-official) place to look to check if a sensor-specific library needs extra setup steps: https://www.pjrc.com/teensy/td_libs.html
 - Information on the Teensy 4.1 board, including port diagrams and such: https://www.pjrc.com/store/teensy41.html
+
+## Libraries We're Using
+> Include a short blurb about why we're using that library, any changes that you had to make to get the library to work, etc.
