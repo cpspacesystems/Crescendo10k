@@ -4,4 +4,5 @@ The software associated with the CPSS FAR 10K rocket competition project titled 
 This project uses PlatformIO
 
 Design rules:
-- test
+    - Writing comments:
+        - 
