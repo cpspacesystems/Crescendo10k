@@ -3,7 +3,7 @@ The software associated with the CPSS FAR 10K rocket competition project titled 
 
 This project uses PlatformIO
 
-# Design rules:
+# Design Rules:
 ## Comments:
 -   Write understandable comments. they don't need to be pretty. Write the comments you would want to read if you had never seen your code before.  
 -   Comments are strongly reccomended for these areas:
@@ -14,7 +14,7 @@ This project uses PlatformIO
   -   Library Calls. Explain what the library function is doing if its not clear. No one wants dig through docs.
 
 # Working as a Team:
-## helpful terms for those new to git:
+## Helpful Terms for Those New to Git:
 - git: 
   Git is the protocol and the set of tools used for version control and code colaboration
 - repository: 
@@ -39,6 +39,8 @@ This project uses PlatformIO
 - Develop the feature on a branch and commit the work
 - Fetch and merge from the remote again (in case new commits were made, make sure your feature still works with the current production)
 - Push branch up to the remote
+
+# Resources
 
 ## Helpful Links:
 - Codecademy page on git collaboration: https://www.codecademy.com/learn/learn-git/modules/learn-git-git-teamwork-u/cheatsheet
