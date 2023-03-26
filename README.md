@@ -3,11 +3,6 @@ The software associated with the CPSS FAR 10K rocket competition project titled 
 
 This project uses PlatformIO
 
-<<<<<<< HEAD
-Design rules:
-    - Writing comments:
-        - 
-=======
 # Design rules:
 ## Comments:
 -   Write understandable comments. they don't need to be pretty. Write the comments you would want to read if you had never seen your code before.  
@@ -55,4 +50,3 @@ Design rules:
 
 ## Libraries We're Using
 > Include a short blurb about why we're using that library, any changes that you had to make to get the library to work, etc.
->>>>>>> refs/remotes/origin/main
