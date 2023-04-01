@@ -1,7 +1,7 @@
 # Crescendo10k
 The software associated with the CPSS FAR 10K rocket competition project titled "Crescendo"
 
-This project uses PlatformIO
+This project uses PlatformIO (Check "Helpful Links" for a quick youtube vuideo on installation and basic information)
 
 # Design Rules:
 ## Comments:
@@ -45,6 +45,7 @@ This project uses PlatformIO
 ## Helpful Links:
 - Codecademy page on git collaboration: https://www.codecademy.com/learn/learn-git/modules/learn-git-git-teamwork-u/cheatsheet
 - Git/GitHub cheat sheet: https://education.github.com/git-cheat-sheet-education.pdf
+- PlatformIO Installation and Introduction: https://www.youtube.com/watch?v=dany7ae_0ks
 - Page with download links for Arduino standard libraries (note--all of these *should* work with a Teensy): https://www.arduino.cc/reference/en/libraries/
 - Places to look for sensor-specific Arduino libraries (note--these are meant for ARDUINO boards and *may* not always work for Teensy 4.1): https://reference.arduino.cc/reference/en/libraries/category/sensors/ 
 - A (Teensy-official) place to look to check if a sensor-specific library needs extra setup steps: https://www.pjrc.com/teensy/td_libs.html
