@@ -1,9 +1,9 @@
 # Crescendo10k
 The software associated with the CPSS FAR 10K rocket competition project titled "Crescendo"
 
-This project uses PlatformIO
+This project uses PlatformIO (Check "Helpful Links" for a quick youtube vuideo on installation and basic information)
 
-# Design rules:
+# Design Rules:
 ## Comments:
 -   Write understandable comments. they don't need to be pretty. Write the comments you would want to read if you had never seen your code before.  
 -   Comments are strongly reccomended for these areas:
@@ -14,7 +14,7 @@ This project uses PlatformIO
   -   Library Calls. Explain what the library function is doing if its not clear. No one wants dig through docs.
 
 # Working as a Team:
-## helpful terms for those new to git:
+## Helpful Terms for Those New to Git:
 - git: 
   Git is the protocol and the set of tools used for version control and code colaboration
 - repository: 
@@ -40,9 +40,12 @@ This project uses PlatformIO
 - Fetch and merge from the remote again (in case new commits were made, make sure your feature still works with the current production)
 - Push branch up to the remote
 
+# Resources
+
 ## Helpful Links:
 - Codecademy page on git collaboration: https://www.codecademy.com/learn/learn-git/modules/learn-git-git-teamwork-u/cheatsheet
 - Git/GitHub cheat sheet: https://education.github.com/git-cheat-sheet-education.pdf
+- PlatformIO Installation and Introduction: https://www.youtube.com/watch?v=dany7ae_0ks
 - Page with download links for Arduino standard libraries (note--all of these *should* work with a Teensy): https://www.arduino.cc/reference/en/libraries/
 - Places to look for sensor-specific Arduino libraries (note--these are meant for ARDUINO boards and *may* not always work for Teensy 4.1): https://reference.arduino.cc/reference/en/libraries/category/sensors/ 
 - A (Teensy-official) place to look to check if a sensor-specific library needs extra setup steps: https://www.pjrc.com/teensy/td_libs.html
