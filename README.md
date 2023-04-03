@@ -9,7 +9,7 @@ This project uses PlatformIO
 -   Comments are strongly reccomended for these areas:
   -   Beggining of file (explain what the file is for)
   -   Beggining of function (explain what the function takes in, does, and then returns)
-  -   FAQ. Places that were hard for you to understand (if you had to go to StackOverflow to get it, then so will the next person. save them the trouble if you can)
+  -   FAQ. Places that were hard for you to understand (if you had to go to StackOverflow to understand it, then so will the next person. save them the trouble if you can)
   -   Math. Mathematical equations in code are impossible to understand, comment what it is and what its doing
   -   Library Calls. Explain what the library function is doing if its not clear. No one wants dig through docs.
 
