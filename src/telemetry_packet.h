@@ -24,6 +24,6 @@ struct telemetry_packet{
     uint8_t imu_data[6];
     uint8_t altimeter_data[4];
     uint8_t gps_data[4];
-} telemetry_packet;
+};
 
 #endif // TELEMETRY_PACKET_H_
