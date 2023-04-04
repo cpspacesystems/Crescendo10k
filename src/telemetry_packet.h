@@ -18,6 +18,7 @@
 #include <Arduino.h>
 #include "states.h"
 
+// Telemetry Packet Struct Definition 
 struct telemetry_packet{
     uint32_t timestamp;
     mission_state state;
