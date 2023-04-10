@@ -8,17 +8,34 @@ class GroveGPS{
     public:
 
     TinyGPSPlus gps;
-    POS pos;
+    POS latest_pos;
     
 
     POS get_pos(){
 
-        GroveGPS::pos.lat = gps.location.lat();
-        GroveGPS::pos.lng = gps.location.lng();
+        GroveGPS::latest_pos.lat = gps.location.lat();
+        GroveGPS::latest_pos.lng = gps.location.lng();
 
-        return pos;
+        return latest_pos;
     }
 
+    double get_lat(){
+
+        GroveGPS::latest_pos.lat = gps.location.lat();
+
+        return latest_pos.lat;
+    }
+
+    double get_lng(){
+
+        GroveGPS::latest_pos.lng = gps.location.lng();
+
+        return latest_pos.lng;
+    }
+
+    void update_pos(){
+            while (Serial1.available() > 0) {
+                gps.encode(Serial1.read());
+            }
+    }
 };
-
-
