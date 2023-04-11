@@ -1,4 +1,5 @@
 #include <Arduino.h>
+<<<<<<< HEAD
 #include "BMI088_Interface.h"
 #include "telemetry_packet.h"
 
@@ -8,6 +9,11 @@
 // telemetry_packet struct to hold most recently polled sensor data
 // malloced in setup() memory 
 struct telemetry_packet *telemetry; 
+=======
+#include "GPS_Interface.cpp"
+
+GroveGPS gps;
+>>>>>>> 728043f (added GPS class constructor and a test line in main to get gps data and print to serial.)
 
 void setup() 
 {
@@ -24,12 +30,22 @@ void setup()
     BMI088_init(&telemetry->accelX, &telemetry->accelY, &telemetry->accelZ, &telemetry->gyroX, &telemetry->gyroY, &telemetry->gyroZ, &telemetry->temperature);
 =======
     pinMode(LED_BUILTIN, OUTPUT);
+<<<<<<< HEAD
 >>>>>>> 0f7b92e (added get_pos method)
+=======
+    pinMode(21, OUTPUT);
+    pinMode(22, INPUT);
+    Serial.begin(9600);
+
+    gps = GroveGPS();
+    
+>>>>>>> 728043f (added GPS class constructor and a test line in main to get gps data and print to serial.)
 }
 
 
 void loop()
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
     //TODO: remove serial stuff for flight code, eventually replace with radio output calls
     Serial.println("main control loop");
@@ -44,4 +60,8 @@ void loop()
     digitalWrite(LED_BUILTIN, LOW);
     delay(1000);
 >>>>>>> 0f7b92e (added get_pos method)
+=======
+    POS pos = gps.get_pos();
+    Serial.printf("Lat: %f, Lng: %f\n", pos.lat, pos.lng);
+>>>>>>> 728043f (added GPS class constructor and a test line in main to get gps data and print to serial.)
 }
