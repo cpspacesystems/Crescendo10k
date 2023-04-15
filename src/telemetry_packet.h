@@ -22,7 +22,13 @@
 struct telemetry_packet{
     uint32_t timestamp;
     mission_state state;
-    uint8_t imu_data[6];
+    float accelX; 
+    float accelY; 
+    float accelZ; 
+    float gyroX; 
+    float gyroY; 
+    float gyroZ; 
+    float temp;
     uint8_t altimeter_data[4];
     uint8_t gps_data[4];
 };
