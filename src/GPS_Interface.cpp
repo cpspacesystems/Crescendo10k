@@ -34,10 +34,13 @@ class GroveGPS{
     }
 
     void update_pos(){
-            while (ss.available() > 0){
+        Serial.begin(9600);
+        while (ss.available() > 0){
             gps.encode(ss.read());
             latest_pos.lat = gps.location.lat();
             latest_pos.lng = gps.location.lng();
+            //TODO: remove serial stuff
+            Serial.printf("Lat: %f, Lng: %f\n", latest_pos.lat, latest_pos.lng);
         }
     }
 };
