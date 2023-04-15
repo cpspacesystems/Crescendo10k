@@ -147,7 +147,9 @@ class SD_Interface
         void dumpLog()
         {
             File file = SD.open("log.txt");
-            Serial.println();
+            
+            while(file.available())
+                Serial.println(file.read());
         }
 };
 
