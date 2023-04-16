@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "sd_log.cpp"
+#include "SD_Interface.cpp"
 #include "states.h"
 
 static telemetry_packet packet = {
