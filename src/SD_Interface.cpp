@@ -149,7 +149,9 @@ class SD_Interface
             File file = SD.open("log.txt");
             
             while(file.available())
-                Serial.println(file.read());
+                Serial.print((char)(file.read()));
+
+            file.close();
         }
 };
 
