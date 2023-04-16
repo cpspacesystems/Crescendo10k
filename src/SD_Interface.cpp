@@ -24,7 +24,7 @@
 #include <fstream>
 #include "telemetry_packet.h"
 
-#define LOG_FILE_NAME "log.txt"
+#define LOG_FILE_NAME "log.csv"
 
 class SD_Interface 
 {
@@ -146,7 +146,7 @@ class SD_Interface
         /* For development. Opens, closes, and dumps contents of the logFile.*/
         void dumpLog()
         {
-            File file = SD.open("log.txt");
+            File file = SD.open(LOG_FILE_NAME);
             
             while(file.available())
                 Serial.print((char)(file.read()));
