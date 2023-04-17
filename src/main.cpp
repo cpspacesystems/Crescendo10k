@@ -11,6 +11,7 @@ struct telemetry_packet *telemetry;
 
 void setup() 
 {
+<<<<<<< HEAD
     //TODO: remove serial stuff for flight code, eventually replace with radio output
     Serial.begin(9600);
     while(!Serial) {}
@@ -21,11 +22,15 @@ void setup()
 
     //initialize the IMU
     BMI088_init(&telemetry->accelX, &telemetry->accelY, &telemetry->accelZ, &telemetry->gyroX, &telemetry->gyroY, &telemetry->gyroZ, &telemetry->temperature);
+=======
+    pinMode(LED_BUILTIN, OUTPUT);
+>>>>>>> 0f7b92e (added get_pos method)
 }
 
 
 void loop()
 {
+<<<<<<< HEAD
     //TODO: remove serial stuff for flight code, eventually replace with radio output calls
     Serial.println("main control loop");
     //TODO: add code to read telemetry packet which should be updated by the reader threads
@@ -33,4 +38,10 @@ void loop()
     while(true){ 
         BMI088_read();
     }
+=======
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(1000);
+>>>>>>> 0f7b92e (added get_pos method)
 }
