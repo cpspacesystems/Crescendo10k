@@ -7,8 +7,16 @@
     BMI088_read() will update the variables on the other side of pointers given in as parameters to BMI088_init()
     main file will then access IMU data and populate the telemetry packet before sending each control cycle
 */
+
 #include <Arduino.h>
 #include "BMI088.h"
+
+#define BMI088_SCL 19
+#define BMI088_SDA 18
+
+/*
+----- Global Variables -----
+*/
 
 /* accel object */
 Bmi088Accel accel(Wire,0x18);
@@ -22,9 +30,12 @@ float *accelZ;
 float *gyroX;
 float *gyroY;
 float *gyroZ;
-float *temp;
-//Initializer function for BMI088 IMU
-//initializes the IMU and sets up the serial connection for gathering data
+float *temperature;
+
+/*
+--Initializer function for BMI088 IMU--
+Initializes the IMU and sets up the serial connection for gathering data
+*/
 void BMI088_init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t){
     // set the pointers to the global variables
     accelX = aX;
@@ -33,21 +44,36 @@ void BMI088_init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *g
     gyroX = gX;
     gyroY = gY;
     gyroZ = gZ;
-    temp = t;
+    temperature = t;
 
     int status;
     // USB Serial to print data 
     // TODO: Not needed for flight code, remove
-    Serial.begin(115200);
-    while(!Serial) {}
+    Serial1.begin(115200);
+    while(!Serial1) {}
+    Serial1.println("Serial1 Initialized");
+
+    // I2C bus for IMU
+    Wire.setSDA(BMI088_SDA);
+    Wire.setSCL(BMI088_SCL);
+
+    
+
+    Wire.begin();
+
     /* start the sensors */
+
+    // start the accelerometer
     status = accel.begin();
+    // if there's an error, print it and wait forever
     if (status < 0) {
         Serial.println("Accel Initialization Error");
         Serial.println(status);
         while (1) {}
     }
+    // start the gyroscope
     status = gyro.begin();
+    // if there's an error, print it and wait forever
     if (status < 0) {
         Serial.println("Gyro Initialization Error");
         Serial.println(status);
@@ -56,29 +82,25 @@ void BMI088_init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *g
 
 }
 
-//Read function for BMI088 IMU
-//reads the IMU data and updates the global variables for the IMU data in the main file
+/* 
+ *   --Read function for BMI088 IMU.--
+ *   Reads the IMU data and updates the variables at the pointers
+ *   passed in as parameters to BMI088_init()
+*/
+
 void BMI088_read(){
-    /* read the accel */
+    // read the accel
     accel.readSensor();
-    /* read the gyro */
+    // read the gyro
     gyro.readSensor();
-    /* print the data */
-    // TODO: instead of printing, update global variables for IMU data
-    Serial.print(accel.getAccelX_mss());
-    Serial.print("\t");
-    Serial.print(accel.getAccelY_mss());
-    Serial.print("\t");
-    Serial.print(accel.getAccelZ_mss());
-    Serial.print("\t");
-    Serial.print(gyro.getGyroX_rads());
-    Serial.print("\t");
-    Serial.print(gyro.getGyroY_rads());
-    Serial.print("\t");
-    Serial.print(gyro.getGyroZ_rads());
-    Serial.print("\t");
-    Serial.print(accel.getTemperature_C());
-    Serial.print("\n");
-    /* delay to help with printing */
-    delay(20);
+    // update global variables for IMU data
+    // TODO: add mutex lock here so that the main file can't 
+    //       access the data while it's being updated causing weird data mismatches
+    *accelX = accel.getAccelX_mss();
+    *accelY = accel.getAccelY_mss();
+    *accelZ = accel.getAccelZ_mss();
+    *gyroX = gyro.getGyroX_rads();
+    *gyroY = gyro.getGyroY_rads();
+    *gyroZ = gyro.getGyroZ_rads();
+    *temperature =  accel.getTemperature_C();
 }

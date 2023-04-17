@@ -20,31 +20,17 @@ void setup()
     telemetry = (struct telemetry_packet *)malloc(sizeof(struct telemetry_packet));
 
     //initialize the IMU
-    BMI088_init(&telemetry->accelX, &telemetry->accelY, &telemetry->accelZ, &telemetry->gyroX, &telemetry->gyroY, &telemetry->gyroZ, &telemetry->temp);
+    BMI088_init(&telemetry->accelX, &telemetry->accelY, &telemetry->accelZ, &telemetry->gyroX, &telemetry->gyroY, &telemetry->gyroZ, &telemetry->temperature);
 }
 
 
 void loop()
 {
-    //TODO: remove serial stuff for flight code, eventually replace with radio output
+    //TODO: remove serial stuff for flight code, eventually replace with radio output calls
     Serial.println("main control loop");
     //TODO: add code to read telemetry packet which should be updated by the reader threads
     // for now just loop here reading BMI088 and print the values to main serial
-    BMI088_read();
-    Serial.print("accelX: ");
-    Serial.println(telemetry->accelX);
-    Serial.print("accelY: ");
-    Serial.println(telemetry->accelY);
-    Serial.print("accelZ: ");
-    Serial.println(telemetry->accelZ);
-    Serial.print("gyroX: ");
-    Serial.println(telemetry->gyroX);
-    Serial.print("gyroY: ");
-    Serial.println(telemetry->gyroY);
-    Serial.print("gyroZ: ");
-    Serial.println(telemetry->gyroZ);
-    Serial.print("temp: ");
-    Serial.println(telemetry->temp);
-    //TODO: remove the delay for flight code
-    delay(1000);
+    while(true){ 
+        BMI088_read();
+    }
 }

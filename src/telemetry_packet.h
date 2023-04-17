@@ -28,7 +28,7 @@ struct telemetry_packet{
     float gyroX; 
     float gyroY; 
     float gyroZ; 
-    float temp;
+    float temperature;
     uint8_t altimeter_data[4];
     uint8_t gps_data[4];
 };
