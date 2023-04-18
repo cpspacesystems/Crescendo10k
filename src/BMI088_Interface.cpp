@@ -10,18 +10,24 @@
 
 #include <Arduino.h>
 #include "BMI088.h"
+#include "TeensyThreads.h"
 
 #define BMI088_SCL 19
 #define BMI088_SDA 18
+// these are the I2C addresses for the BMI088 IMU determined by what the SDO pins are connected to on the board
+// SDO1 and SDO2 are both connected to ground on the board. these are the addresses for that configuration:
+#define BMI088_SDO1 0x18
+#define BMI088_SDO2 0x68
+
 
 /*
 ----- Global Variables -----
 */
 
 /* accel object */
-Bmi088Accel accel(Wire,0x18);
+Bmi088Accel accel(Wire, BMI088_SDO1 );
 /* gyro object */
-Bmi088Gyro gyro(Wire,0x68);
+Bmi088Gyro gyro(Wire, BMI088_SDO2);
 
 // IMU data pointers
 float *accelX;
@@ -33,10 +39,10 @@ float *gyroZ;
 float *temperature;
 
 /*
---Initializer function for BMI088 IMU--
-Initializes the IMU and sets up the serial connection for gathering data
-*/
-void BMI088_init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t){
+ *  -------Initializer function for BMI088 IMU--------
+ *  Initializes the IMU and sets up the serial connection for gathering data
+ */
+void BMI088_Init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t){
     // set the pointers to the global variables
     accelX = aX;
     accelY = aY;
@@ -47,60 +53,58 @@ void BMI088_init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *g
     temperature = t;
 
     int status;
-    // USB Serial to print data 
-    // TODO: Not needed for flight code, remove
-    Serial1.begin(115200);
-    while(!Serial1) {}
-    Serial1.println("Serial1 Initialized");
 
-    // I2C bus for IMU
-    Wire.setSDA(BMI088_SDA);
-    Wire.setSCL(BMI088_SCL);
-
+    // initialize accel and gyro objects
+    
     
 
     Wire.begin();
+
+
 
     /* start the sensors */
 
     // start the accelerometer
     status = accel.begin();
-    // if there's an error, print it and wait forever
+    // if there's an error, print it and set the errror flag
     if (status < 0) {
         Serial.println("Accel Initialization Error");
         Serial.println(status);
-        while (1) {}
     }
     // start the gyroscope
     status = gyro.begin();
-    // if there's an error, print it and wait forever
+    // if there's an error, print it and set the error flag
     if (status < 0) {
         Serial.println("Gyro Initialization Error");
         Serial.println(status);
-        while (1) {}
     }
+
+
 
 }
 
 /* 
- *   --Read function for BMI088 IMU.--
- *   Reads the IMU data and updates the variables at the pointers
- *   passed in as parameters to BMI088_init()
+ *  ------- IMU THREAD MAIN FUNCTION -------
+ *  Reads the IMU data and updates the variables at the telemetry packet components at the pointers
+ *  passed in as parameters to BMI088_init()
 */
 
-void BMI088_read(){
-    // read the accel
-    accel.readSensor();
-    // read the gyro
-    gyro.readSensor();
-    // update global variables for IMU data
-    // TODO: add mutex lock here so that the main file can't 
-    //       access the data while it's being updated causing weird data mismatches
-    *accelX = accel.getAccelX_mss();
-    *accelY = accel.getAccelY_mss();
-    *accelZ = accel.getAccelZ_mss();
-    *gyroX = gyro.getGyroX_rads();
-    *gyroY = gyro.getGyroY_rads();
-    *gyroZ = gyro.getGyroZ_rads();
-    *temperature =  accel.getTemperature_C();
+void BMI088_Thread_Main(){
+    // while loop to read the IMU data
+    // TODO: check the mission state to see if the thread needs to end. if so, break out of loop and end thread
+    while (true){
+        // read the accel
+        accel.readSensor();
+        // read the gyro
+        gyro.readSensor();
+        // update global variables for IMU data
+        // TODO: add mutex lock on here so that main.cpp can't access while thread is updating causing data mismatches
+        *accelX = accel.getAccelX_mss();
+        *accelY = accel.getAccelY_mss();
+        *accelZ = accel.getAccelZ_mss();
+        *gyroX = gyro.getGyroX_rads();
+        *gyroY = gyro.getGyroY_rads();
+        *gyroZ = gyro.getGyroZ_rads();
+        *temperature =  accel.getTemperature_C();
+    }
 }

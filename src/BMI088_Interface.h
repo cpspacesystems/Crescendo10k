@@ -7,8 +7,8 @@
 #include "BMI088.h"
 
 //function declarations
-void BMI088_init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t);
-void BMI088_read();
+void BMI088_Init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t);
+void BMI088_Thread_Main();
 
 #endif
 
