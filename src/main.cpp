@@ -1,9 +1,12 @@
 #include <Arduino.h>
+#include "GPS_Interface.cpp"
 #include "BMI088_Interface.h"
 #include "telemetry_packet.h"
 
 #define BMI088_SCL 19
 #define BMI088_SDA 18
+
+GroveGPS gps;
 
 // telemetry_packet struct to hold most recently polled sensor data
 // malloced in setup() memory 
@@ -21,6 +24,14 @@ void setup()
 
     //initialize the IMU
     BMI088_init(&telemetry->accelX, &telemetry->accelY, &telemetry->accelZ, &telemetry->gyroX, &telemetry->gyroY, &telemetry->gyroZ, &telemetry->temperature);
+    pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(21, OUTPUT); //GPS TX
+    pinMode(22, INPUT);  //GPS RX
+    // Serial.begin(9600);
+    while(!Serial) {}
+    Serial.println("Teensy Serial Output Initialized");
+    gps = GroveGPS();
+    gps.update_pos();
 }
 
 
