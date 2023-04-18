@@ -3,8 +3,11 @@
 
 #ifndef BMI088_INTERFACE_H
 #define BMI088_INTERFACE_H
+
+
 #include <Arduino.h>
 #include "BMI088.h"
+#include <TeensyThreads.h>
 
 //function declarations
 void BMI088_Init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t);

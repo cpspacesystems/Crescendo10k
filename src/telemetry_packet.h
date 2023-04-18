@@ -30,7 +30,9 @@ struct telemetry_packet{
     float gyroZ; 
     float temperature;
     uint8_t altimeter_data[4];
-    uint8_t gps_data[4];
+    volatile double latitude;
+    volatile double longitude;
+    volatile uint32_t error_code = 0;
 };
 
 #endif // TELEMETRY_PACKET_H_

@@ -1,16 +1,16 @@
 /*  CPP file defining functions for interfacing with BMI088 IMU
-    uses the Bolder Flight Systems BMI088 library
-    functions declared in BMI088_Interface.h
-
-    first initialize the IMU with BMI088_init()
-    create a thread to run BMI088_read() in the background
-    BMI088_read() will update the variables on the other side of pointers given in as parameters to BMI088_init()
-    main file will then access IMU data and populate the telemetry packet before sending each control cycle
+ *  uses the Bolder Flight Systems BMI088 library
+ *  functions declared in BMI088_Interface.h
+ *  
+ *  first initialize the IMU with BMI088_Init()
+ *  create a thread to run BMI088_Thread_Main() in the background
+ *  BMI088_Thread_Main()) will update the variables on the other side of pointers given in as parameters to BMI088_Init()
+ *  main file should then access IMU data and populate the telemetry packet before sending each control cycle
 */
 
 #include <Arduino.h>
 #include "BMI088.h"
-#include "TeensyThreads.h"
+#include <TeensyThreads.h>
 
 #define BMI088_SCL 19
 #define BMI088_SDA 18
@@ -28,6 +28,7 @@
 Bmi088Accel accel(Wire, BMI088_SDO1 );
 /* gyro object */
 Bmi088Gyro gyro(Wire, BMI088_SDO2);
+
 
 // IMU data pointers
 float *accelX;
@@ -53,14 +54,9 @@ void BMI088_Init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *g
     temperature = t;
 
     int status;
-
-    // initialize accel and gyro objects
-    
-    
-
+    Wire.setSCL(BMI088_SCL);
+    Wire.setSDA(BMI088_SDA);
     Wire.begin();
-
-
 
     /* start the sensors */
 
@@ -78,8 +74,6 @@ void BMI088_Init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *g
         Serial.println("Gyro Initialization Error");
         Serial.println(status);
     }
-
-
 
 }
 
