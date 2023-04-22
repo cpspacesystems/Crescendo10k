@@ -4,11 +4,20 @@
 
 
 SoftwareSerial ss(22, 21);
-union POS {double lat; double lng;}; //position union
+
+/* Changed this union to a struct; it seemed that
+we needed the latitude and longitude coordinates 
+be separate. The section of code marked [1] 
+loads the coordinates right after each other,
+which would mean the second overwrites the first. */
+struct pos {
+    double lat; 
+    double lng;
+}; // latitude and longitude struct
 
 class GroveGPS{
     private:
-    POS latest_pos;
+    pos latest_pos;
     TinyGPSPlus gps;
     public:
     
@@ -18,8 +27,7 @@ class GroveGPS{
         gps = TinyGPSPlus();
     }
 
-    POS get_pos(){
-
+    pos get_pos(){
         latest_pos.lat = gps.location.lat();
         latest_pos.lng = gps.location.lng();
         return latest_pos;
@@ -37,6 +45,8 @@ class GroveGPS{
         Serial.begin(9600);
         while (ss.available() > 0){
             gps.encode(ss.read());
+
+            // [1]
             latest_pos.lat = gps.location.lat();
             latest_pos.lng = gps.location.lng();
             //TODO: remove serial stuff
