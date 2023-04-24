@@ -10,7 +10,7 @@
 #include <SoftwareSerial.h>
 #include <TeensyThreads.h>
 
-void GPS_Init(volatile double *lattitude, volatile double *longitude);
+void GPS_Init(volatile uint8_t *gps_status_code, volatile double *lattitude, volatile double *longitude);
 void GPS_Thread_Main();
 
 #endif // GPS_INTERFACE_H_

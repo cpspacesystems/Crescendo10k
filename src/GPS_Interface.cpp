@@ -22,6 +22,7 @@
 SoftwareSerial ss(GPS_RX_PIN, GPS_TX_PIN); 
 volatile double *latest_lat;
 volatile double *latest_lng;
+volatile uint8_t *gps_status_code;
 TinyGPSPlus tiny_gps;
 
 
@@ -30,18 +31,28 @@ TinyGPSPlus tiny_gps;
 This function is called by main.cpp to initialize the GPS module connection and variables
 */
 
-void GPS_Init(volatile double *lattitude, volatile double *longitude){
+void GPS_Init(volatile uint8_t *gps_status, volatile double *lattitude, volatile double *longitude){
     // store pointers to latest telemetry packet variables
     latest_lat = lattitude;
     latest_lng = longitude;
+    gps_status_code = gps_status;
     tiny_gps = TinyGPSPlus(); // initialize TinyGPS++ object
+
     // set GPIO pins for SoftwareSerial connection to GPS module
     // pinMode(GPS_TX_PIN, OUTPUT); //GPS TX
     // pinMode(GPS_RX_PIN, INPUT);  //GPS RX
+
+    
     // begin SoftwareSerial connection to GPS module
     ss.begin(9600);
     // wait for serial connection to be established
-    while(!ss) {}
+    while(!ss) {} //TODO: this will timeout 
+
+    // perform status check on GPS module
+    while (ss.available() > 0){ //flush the serial buffer
+        ss.read();
+    }
+    
 }
 
 
@@ -58,13 +69,16 @@ void GPS_Thread_Main(){
 
     /*----- MAIN CONTROL LOOP ----*/
         //TODO: add check for mission state
-    while (ss.available() > 0){                 
-        tiny_gps.encode(ss.read());             //read data from GPS module
-        //TODO: add check for valid GPS data
-        //TODO: add check for GPS data timeout
-        //TODO: add a mutex lock here so data doesn't get corrupted on the other end
-        *latest_lat = tiny_gps.location.lat();  //update latest_lat and latest_lng
-        *latest_lng = tiny_gps.location.lng();
-    }  
+    while(1){ // TODO: change this to a check for mission_state
+        gps_status_code = 0; //TODO: add status codes
+        while (ss.available() > 0){                 
+            tiny_gps.encode(ss.read());             //read data from GPS module
+            //TODO: add check for valid GPS data
+            //TODO: add check for GPS data timeout
+            //TODO: add a mutex lock here so data doesn't get corrupted on the other end
+            *latest_lat = tiny_gps.location.lat();  //update latest_lat and latest_lng
+            *latest_lng = tiny_gps.location.lng();
+        }  
+    }
 
 }
