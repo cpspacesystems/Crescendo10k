@@ -3,11 +3,19 @@
 
 #ifndef BMI088_INTERFACE_H
 #define BMI088_INTERFACE_H
+
+
 #include <Arduino.h>
 #include "BMI088.h"
+#include <TeensyThreads.h>
+#include "telemetry_packet.h"
 
 //function declarations
-void BMI088_Init(float *aX, float *aY, float *aZ, float *gX, float *gY, float *gZ, float *t);
+void BMI088_Init( 
+    volatile uint8_t *imu_status_code,
+    volatile float *aX, volatile float *aY, volatile float *aZ,
+    volatile float *gX, volatile float *gY, volatile float *gZ, 
+    volatile float *t);
 void BMI088_Thread_Main();
 
 #endif
