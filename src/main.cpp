@@ -1,4 +1,18 @@
 #include <Arduino.h>
+<<<<<<< HEAD
+#include "SD_Interface.cpp"
+#include "states.h"
+
+static telemetry_packet packet = {
+    0, 
+    (mission_state)6, 
+    {0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+};
+
+static SD_Interface *sDLog;
+=======
 #include "GPS_Interface.h"
 #include "BMI088_Interface.h"
 #include "telemetry_packet.h"
@@ -13,6 +27,7 @@ struct telemetry_packet *telemetry;
 // global state variable to be used by all threads as a failsafe in case telemetry packet is not being updated
 const volatile mission_state global_state = NAV_CONVERGE;
 mission_state * state = (mission_state *) &global_state; // have to cast to non-const pointer to pass to threads
+>>>>>>> main
 
 void setup() 
 {
@@ -87,7 +102,6 @@ void setup()
     telemetry->mission_state = PAD_IDLE;
     //off to the races!
 }
-
 
 void loop()
 {

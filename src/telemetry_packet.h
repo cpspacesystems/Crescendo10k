@@ -9,7 +9,6 @@
     * - most recent IMU poll
     * - most recent altimeter poll
     * - most recent GPS poll
-    * Author: Cameron McClure-Coleman
 */
 
 
@@ -46,13 +45,12 @@
 
 #include <Arduino.h>
 #include "states.h"
-
 // Telemetry Packet Struct Definition 
 struct telemetry_packet{
 
     volatile uint32_t timestamp;
     volatile mission_state mission_state;
-
+    volatile int radio_status;
     volatile uint8_t imu_status;
     volatile float imu_accelX; 
     volatile float imu_accelY; 
@@ -61,17 +59,14 @@ struct telemetry_packet{
     volatile float imu_gyroY; 
     volatile float imu_gyroZ; 
     volatile float imu_temperature;
-
     volatile uint8_t altimeter_status;
-    uint8_t altimeter_data[4]; 
-
+    volatile double altimeter_temperature;
+    volatile double altimeter_pressure;
+    volatile double altimeter_altitude;
     volatile uint8_t gps_status;
     volatile double gps_latitude;
     volatile double gps_longitude;
-    
+    volatile double gps_altitude;
 };
-
-
-
 
 #endif // TELEMETRY_PACKET_H_
