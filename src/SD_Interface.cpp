@@ -26,134 +26,156 @@
 
 #define LOG_FILE_NAME "log.csv"
 
-class SD_Interface 
-{
-    private:
-        /* Pointer to the packet to read from */
-        telemetry_packet *packet;
-        /* File to log to */
-        File logFile;
+/* Pointer to the packet to read from */
+telemetry_packet *packet;
+/* File to log to */
+File logFile;
 
-    public: 
-        SD_Interface(telemetry_packet *p) 
-        {
-            /* Initializes the packet pointer field with the inputted packet pointer. */
-            packet = p;
+void SD_Init(telemetry_packet *p){
+    /* TODO: change this to initialize a reader from flash memory 
+                the SD card is only written to after touchdown */
+    packet = p; // Initialize pointer to telemetry packet
 
-            if(!SD.begin(BUILTIN_SDCARD))
-            {
-                /* TODO: What other actions should we take if initialization fails? */
-                Serial.println("SD initialization failed.");
-            }
+    /*---Initialize Connection to SD Card---*/
 
-            Serial.println("SD initialization succeeded.");
+    
+    if(!SD.begin(BUILTIN_SDCARD)){
+        /* TODO: update sd status in telemetry packet and let it transmit 
+        also, remove print statements*/
+        Serial.println("SD initialization failed.");
+    }
 
-            /* Delete the old log file if it exists */
-            if(SD.exists(LOG_FILE_NAME))
-                SD.remove(LOG_FILE_NAME);
+    /*---Initialize file pointer for log file on SD card---*/
 
-            /* Open the log file in append mode */
-            logFile = SD.open(LOG_FILE_NAME, O_WRITE);
-            
-            /* Check if the file was opened successfully. */
-            if(logFile)
-            {
-                Serial.println("File opened.");
-            }
-            else
-            {
-                /* If not, state there was an error... */
-                Serial.print("Error opening ");
-                Serial.print(LOG_FILE_NAME);
-                Serial.println(".");
-                Serial.println("Trying again.");
+    /* Open the log file in append mode */
+    logFile = SD.open(LOG_FILE_NAME, O_WRITE);
+    /* Check if the file was opened successfully. */
+    if(logFile) {
+        Serial.println("File opened.");
+    } else {
+        /* If not, state there was an error... */
+        Serial.print("Error opening ");
+        Serial.print(LOG_FILE_NAME);
+        Serial.println(".");
+        Serial.println("Trying again.");
 
-                /* ...and retry opening the file a #defined number of times.*/
-                if(logOpenRetry(LOG_REOPEN_ATTEMPTS))
-                    Serial.println("File opened.");
-                else
-                    Serial.println("Opening log file failed; giving up.");
-            }
-        }
+        /* ...and retry opening the file a #defined number of times.*/
+        if(logOpenRetry(LOG_REOPEN_ATTEMPTS))
+            Serial.println("File opened.");
+        else
+            Serial.println("Opening log file failed; giving up.");
+    }
+}
+
+void SD_Thread_Main(){
+
+}
+
 
         /* TODO: should we address buffer overflow? */
 
         /* Takes data from the telemetry packet and prints
         it, CSV-formatted, to the file on the SD card */
-        void logPacket() 
-        {
-            /* Print both the timestamp and the state as an integer */
-            logFile.print(packet->timestamp);
-            logFile.print(", ");
-            logFile.print(packet->state);
+void logPacket() 
+{
+    /* Print both the timestamp and the state as an integer */
+    logFile.print(packet->timestamp);
+    logFile.print(", ");
+    logFile.print(packet->mission_state);
+    logFile.print(", ");
 
-            /* Print all IMU data points */
-            for(int i = 0; i < IMUDATASIZE; i++) 
-            {
-                logFile.print(", ");
-                logFile.print(packet->imu_data[i]);
-            }
-            
-            /* Print all altimeter data points */
-            for(int i = 0; i < ALTIMETERDATASIZE; i++) 
-            {
-                logFile.print(", ");
-                logFile.print(packet->altimeter_data[i]);
-            }
-                
+    /* Print radio status */
+    logFile.print(packet->radio_status);
+    logFile.print(", ");
 
-            /* Print all GPS data points */
-            for(int i = 0; i < GPSDATASIZE; i++)
-            {
-                logFile.print(", ");
-                logFile.print(packet->gps_data[i]);
-            }
+    /* Print all IMU data points */
+    logFile.print(packet->imu_status);
+    logFile.print(", ");
+    logFile.print(packet->imu_accelX);
+    logFile.print(", ");
+    logFile.print(packet->imu_accelY);
+    logFile.print(", ");
+    logFile.print(packet->imu_accelZ);
+    logFile.print(", ");
+    logFile.print(packet->imu_gyroX);
+    logFile.print(", ");
+    logFile.print(packet->imu_gyroY);
+    logFile.print(", ");
+    logFile.print(packet->imu_gyroZ);
+    logFile.print(", ");
+    logFile.print(packet->imu_temperature);
+    logFile.print(", ");
+    
+    /* Print all altimeter data points */
+    logFile.print(packet->altimeter_status);
+    logFile.print(", ");
+    logFile.print(packet->altimeter_temperature);
+    logFile.print(", ");
+    logFile.print(packet->altimeter_pressure);
+    logFile.print(", ");
+    logFile.print(packet->altimeter_altitude);
+    logFile.print(", ");
+    
+    /* Print all GPS data points */
+    logFile.print(packet->gps_status);
+    logFile.print(", ");
+    logFile.print(packet->gps_latitude);
+    logFile.print(", ");
+    logFile.print(packet->gps_longitude);
+    logFile.print(", ");
+    logFile.print(packet->gps_altitude);
+    logFile.print(", ");
 
-            logFile.println();
-        }
+    /* Print a newline */
+    logFile.println();
+    
+}
 
-        /* Attempt to re-open the log file a LOG_REOPEN_ATTEMPTS
-        times. */
-        bool logOpenRetry(int n)
-        {
-            for(int i = 0; i < n; i++)
-            {
 
-                /* Open the log file in append mode */
-                logFile = SD.open(LOG_FILE_NAME, O_WRITE);
-                Serial.println("File opened.");
+/* Attempt to re-open the log file a LOG_REOPEN_ATTEMPTS
+times. */
+bool logOpenRetry(int n)
+{
+    for(int i = 0; i < n; i++)
+    {
 
-                /* Check if the file was opened successfully. */
-                if(logFile)
-                    return true;
+        /* Open the log file in append mode */
+        logFile = SD.open(LOG_FILE_NAME, O_WRITE);
+        Serial.println("File opened.");
 
-                /* If not, state there was an error and continue retrying*/
-                Serial.print("Error opening ");
-                Serial.print(LOG_FILE_NAME);
-                Serial.print(".\n");
-            }
+        /* Check if the file was opened successfully. */
+        if(logFile)
+            return true;
 
-            return false;
-        }
+        /* If not, state there was an error and continue retrying*/
+        Serial.print("Error opening ");
+        Serial.print(LOG_FILE_NAME);
+        Serial.print(".\n");
+    }
 
-        /* Closes any open files and saves data */
-        void close()
-        {
-            logFile.close();
-            Serial.println("File closed.");
-        }
+    return false;
+}
 
-        /* For development. Opens, closes, and dumps contents of the logFile.*/
-        void dumpLog()
-        {
-            File file = SD.open(LOG_FILE_NAME);
-            
-            while(file.available())
-                Serial.print((char)(file.read()));
 
-            file.close();
-        }
-};
+/* Closes any open files and saves data */
+void close()
+{
+    logFile.close();
+    Serial.println("File closed.");
+}
+
+
+/* For development. Opens, closes, and dumps contents of the logFile.*/
+void dumpLog()
+{
+    File file = SD.open(LOG_FILE_NAME);
+    
+    while(file.available())
+        Serial.print((char)(file.read()));
+
+    file.close();
+}
+
 
 #endif // SD_INTERFACE_
 
