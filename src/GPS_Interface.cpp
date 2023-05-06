@@ -71,6 +71,7 @@ void GPS_Thread_Main(){
         //TODO: add check for mission state
     while(1){ // TODO: change this to a check for mission_state
         gps_status_code = 0; //TODO: add status codes
+        
         while (ss.available() > 0){                 
             tiny_gps.encode(ss.read());             //read data from GPS module
             //TODO: add check for valid GPS data
