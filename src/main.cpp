@@ -19,8 +19,6 @@ mission_state * state = (mission_state *) &global_state; // have to cast to non-
 
 void setup() 
 {
-    //TODO: BIG TODO, put all the module initialization into nav converge state function instead of here because nav converge is never transmitted currently.
-    // also initialize radio first so that it can be used to transmit errors if other modules fail to initialize
     //TODO: remove serial stuff for flight code, eventually replace with radio output
     Serial.begin(9600);
     while(!Serial) {}
