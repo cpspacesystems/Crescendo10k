@@ -24,8 +24,6 @@ void setup()
     while(!Serial) {}
     Serial.println("Teensy Serial Output Initialized");
 
-
-
     /*------- INITIALIZE TELEMETRY PACKET -------*/
 
     // allocate memory for the telemetry packet
@@ -53,15 +51,10 @@ void setup()
     telemetry->gps_longitude = 0;
     telemetry->gps_altitude = 0;
 
-    
-    
-
-
     /*------- CHANGE STATE TO NAV_CONVERGE -------*/
     *state = NAV_CONVERGE;
     telemetry->mission_state = NAV_CONVERGE;
-    // off to the races!
-    // nav converge handle making sure all modules are initialized before moving on to pad_idle
+    // let nav converge handle making sure all modules are initialized before moving on to pad_idle
 }
 
 void loop()
