@@ -1,18 +1,7 @@
 #include <Arduino.h>
-<<<<<<< HEAD
 #include "SD_Interface.cpp"
 #include "states.h"
-
-static telemetry_packet packet = {
-    0, 
-    (mission_state)6, 
-    {0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-};
-
-static SD_Interface *sDLog;
-=======
+#include "SD_Interface.h"
 #include "GPS_Interface.h"
 #include "BMI088_Interface.h"
 #include "telemetry_packet.h"
@@ -27,18 +16,13 @@ struct telemetry_packet *telemetry;
 // global state variable to be used by all threads as a failsafe in case telemetry packet is not being updated
 const volatile mission_state global_state = NAV_CONVERGE;
 mission_state * state = (mission_state *) &global_state; // have to cast to non-const pointer to pass to threads
->>>>>>> main
 
 void setup() 
 {
-    //TODO: BIG TODO, put all the module initialization into nav converge state function instead of here because nav converge is never transmitted currently.
-    // also initialize radio first so that it can be used to transmit errors if other modules fail to initialize
     //TODO: remove serial stuff for flight code, eventually replace with radio output
     Serial.begin(9600);
     while(!Serial) {}
     Serial.println("Teensy Serial Output Initialized");
-
-
 
     /*------- INITIALIZE TELEMETRY PACKET -------*/
 
@@ -58,49 +42,19 @@ void setup()
     telemetry->imu_temperature = 0;
     // altimeter data
     telemetry->altimeter_status = 0;
-    telemetry->altimeter_data[0] = 0;
-    telemetry->altimeter_data[1] = 0;
-    telemetry->altimeter_data[2] = 0;
-    telemetry->altimeter_data[3] = 0;
+    telemetry->altimeter_temperature = 0;
+    telemetry->altimeter_pressure = 0;
+    telemetry->altimeter_altitude = 0;
     // GPS data
+    telemetry->gps_status = 0;
     telemetry->gps_latitude = 0;
     telemetry->gps_longitude = 0;
-    telemetry->gps_status = 0;
+    telemetry->gps_altitude = 0;
 
-
-
-
-    /*------- INITIALIZE SENSORS AND CONNECTIONS-------*/
-
-    //initialize the IMU
-    BMI088_Init(
-        &telemetry->imu_status, 
-        &telemetry->imu_accelX, &telemetry->imu_accelY, &telemetry->imu_accelZ, 
-        &telemetry->imu_gyroX, &telemetry->imu_gyroY, &telemetry->imu_gyroZ, 
-        &telemetry->imu_temperature);
-    //initialize the GPS
-    GPS_Init(&telemetry->gps_status, &telemetry->gps_latitude, &telemetry->gps_longitude);
-
-
-    
-    /*------- INITIALIZE THREADS -------*/
-
-    //IMU thread
-    threads.addThread(BMI088_Thread_Main, 1);
-    //GPS thread
-    threads.addThread(GPS_Thread_Main, 2);
-
-    //TODO: add threads for other modules
-    
-    //Altimeter thread
-    // threads.addThread(Altimeter_Thread_Main, 3);
-    //Radio thread
-    // threads.addThread(Radio_Thread_Main, 4);
-
-    /*------- CHANGE STATE TO PAD_IDLE -------*/
-    *state = PAD_IDLE;
-    telemetry->mission_state = PAD_IDLE;
-    //off to the races!
+    /*------- CHANGE STATE TO NAV_CONVERGE -------*/
+    *state = NAV_CONVERGE;
+    telemetry->mission_state = NAV_CONVERGE;
+    // let nav converge handle making sure all modules are initialized before moving on to pad_idle
 }
 
 void loop()
