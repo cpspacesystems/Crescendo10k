@@ -15,6 +15,7 @@
 #include "TinyGPS++.h"
 #include <SoftwareSerial.h>
 #include <TeensyThreads.h>
+#include "telemetry_packet.h"
 
 #define GPS_TX_PIN 21
 #define GPS_RX_PIN 20
@@ -24,7 +25,7 @@ volatile double *latest_lat;
 volatile double *latest_lng;
 volatile uint8_t *gps_status_code;
 TinyGPSPlus tiny_gps;
-
+static const uint32_t GPSBaud = 4800;
 
 
 /* -------- GPS INITIALIZATION FUNCTION --------
@@ -44,18 +45,35 @@ void GPS_Init(volatile uint8_t *gps_status, volatile double *lattitude, volatile
 
     
     // begin SoftwareSerial connection to GPS module
-    ss.begin(9600);
+    ss.begin(GPSBaud);
     // wait for serial connection to be established
-    while(!ss) {} //TODO: this will timeout 
-
-    // perform status check on GPS module
-    while (ss.available() > 0){ //flush the serial buffer
-        ss.read();
+    uint16_t gps_init_timeout = 1000;
+    while(!ss || gps_init_timeout > 0){
+        *gps_status_code = GPS_SERIAL_CONNECTION_ERROR;
+        gps_init_timeout--;
+    }
+    if(gps_init_timeout == 0){
+        *gps_status_code = GPS_INITIALIZATION_TIMEOUT;
+    } else
+    {
+        *gps_status_code = NO_ERROR;
     }
     
 }
 
-
+void packetize_gps_data(){
+  // check the GPS module for new data that is valid
+  if (tiny_gps.location.isValid())
+  {
+    *latest_lat = tiny_gps.location.lat();
+    *latest_lng = tiny_gps.location.lng();
+    *gps_status_code = NO_ERROR;
+  }
+  else
+  {
+    *gps_status_code = GPS_DATA_ERROR;
+  }
+}
 
 /*  -------- GPS THREAD FUNCTION --------
  *  
@@ -69,16 +87,20 @@ void GPS_Thread_Main(){
 
     /*----- MAIN CONTROL LOOP ----*/
         //TODO: add check for mission state
-    while(1){ // TODO: change this to a check for mission_state
-        gps_status_code = 0; //TODO: add status codes
-        while (ss.available() > 0){                 
-            tiny_gps.encode(ss.read());             //read data from GPS module
-            //TODO: add check for valid GPS data
-            //TODO: add check for GPS data timeout
-            //TODO: add a mutex lock here so data doesn't get corrupted on the other end
-            *latest_lat = tiny_gps.location.lat();  //update latest_lat and latest_lng
-            *latest_lng = tiny_gps.location.lng();
-        }  
+    {
+  // This sketch displays information every time a new sentence is correctly encoded.
+    while (ss.available() > 0){
+        if (tiny_gps.encode(ss.read())){}
+            packetize_gps_data();
+        }
     }
 
+  if (millis() > 5000 && tiny_gps.charsProcessed() < 10)
+  {
+    *gps_status_code = GPS_INITIALIZATION_ERROR;
+  }
+
 }
+
+
+

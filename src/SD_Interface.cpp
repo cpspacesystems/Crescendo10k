@@ -15,8 +15,6 @@
     * 
     * Author: Spandan Suthar
 */
-#ifndef SD_INTERFACE_CPP
-#define SD_INTERFACE_CPP
 
 #define LOG_REOPEN_ATTEMPTS 5
 #include <Arduino.h>
@@ -156,7 +154,7 @@ void SD_Init(telemetry_packet *p){
 
 
 void SD_Thread_Main(){
-
+    //TODO: implement
 }
 
 
@@ -179,6 +177,3 @@ void dumpLog()
 
     file.close();
 }
-
-
-#endif

@@ -25,11 +25,12 @@
 
     // initialization error codes
 #define     GPS_INITIALIZATION_TIMEOUT 20
-#define     IMU_INITIALIZATION_TIMEOUT 21
-#define     IMU_ACCEL_INITIALIZATION_ERROR 22
-#define     IMU_GYRO_INITIALIZATION_ERROR 23
-#define     ALTIMETER_INITIALIZATION_TIMEOUT 24
-#define     RADIO_INITIALIZATION_TIMEOUT 25
+#define     GPS_INITIALIZATION_ERROR 21
+#define     IMU_INITIALIZATION_TIMEOUT 22
+#define     IMU_ACCEL_INITIALIZATION_ERROR 23
+#define     IMU_GYRO_INITIALIZATION_ERROR 24
+#define     ALTIMETER_INITIALIZATION_TIMEOUT 25
+#define     RADIO_INITIALIZATION_TIMEOUT 26
 
     // timeout error codes
 #define     GPS_TIMEOUT 40
@@ -43,13 +44,17 @@
 #define     ALTIMETER_DATA_ERROR 62
 #define     RADIO_DATA_ERROR 63
 
+    // board to module connection error codes
+#define     GPS_SERIAL_CONNECTION_ERROR 80
+
+
 #include <Arduino.h>
 #include "states.h"
 // Telemetry Packet Struct Definition 
 struct telemetry_packet{
 
     volatile uint32_t timestamp;
-    volatile mission_state mission_state;
+    volatile Mission_State mission_state;
     volatile int radio_status;
     volatile uint8_t imu_status;
     volatile float imu_accelX; 

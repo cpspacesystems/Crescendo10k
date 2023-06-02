@@ -12,5 +12,6 @@
 
 void GPS_Init(volatile uint8_t *gps_status_code, volatile double *lattitude, volatile double *longitude);
 void GPS_Thread_Main();
+void packetize_gps_data();
 
 #endif // GPS_INTERFACE_H_

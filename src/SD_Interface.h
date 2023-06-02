@@ -14,6 +14,7 @@ void SD_Init(telemetry_packet *p);
 void SD_Thread_Main();
 bool logOpenRetry(int attempts);
 void close();
+void dumpLog();
 void logPacket();
 
 #endif

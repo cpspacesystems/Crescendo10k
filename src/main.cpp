@@ -14,8 +14,8 @@
 // malloced in setup() memory 
 struct telemetry_packet *telemetry; 
 // global state variable to be used by all threads as a failsafe in case telemetry packet is not being updated
-const volatile mission_state global_state = NAV_CONVERGE;
-mission_state * state = (mission_state *) &global_state; // have to cast to non-const pointer to pass to threads
+const volatile Mission_State global_state = NAV_CONVERGE;
+Mission_State * state = (Mission_State *) &global_state; // have to cast to non-const pointer to pass to threads
 
 void setup() 
 {
@@ -95,6 +95,6 @@ void loop()
 
 
 
-        delay(50); // remove this for flight code and run at max speed allowable by sensors
+        delay(50); // remove this for flight code and run at max speed
     }
 }

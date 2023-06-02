@@ -1,6 +1,6 @@
 #ifndef STATES_H_
 #define STATES_H_
-enum mission_state {
+enum Mission_State {
     NAV_CONVERGE,
     PAD_IDLE,
     ASCENT,
