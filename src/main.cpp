@@ -30,7 +30,7 @@ void setup()
     telemetry = (struct telemetry_packet *)malloc(sizeof(struct telemetry_packet));
     // initialize the telemetry packet data
     telemetry->timestamp = 0;
-    telemetry->mission_state = NAV_CONVERGE;
+
     // imu data
     telemetry->imu_status = 0;
     telemetry->imu_accelX = 0;

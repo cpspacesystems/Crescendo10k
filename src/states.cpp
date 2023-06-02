@@ -47,7 +47,7 @@ void state_nav_converge(struct telemetry_packet *telemetry_pointer, uint8_t *sta
     //Altimeter thread
     // threads.addThread(Altimeter_Thread_Main, 3);
     //Radio thread
-    // threads.addThread(Radio_Thread_Main, 4);
+    // threads.addThread(RFD_Thread_Main, 4);
     //SD thread
     // threads.addThread(SD_Thread_Main, 5);
 

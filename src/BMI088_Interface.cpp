@@ -76,7 +76,7 @@ void BMI088_Init(
     // start the gyroscope
 
     status = gyro.begin();
-    // if there's an error, print it and set the error flag
+    // if there's an error, print it and set the error flag and return
     if (status < 0) {
         *imu_status_code = IMU_GYRO_INITIALIZATION_ERROR;
         Serial.println(status);
