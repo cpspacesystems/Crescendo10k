@@ -15,9 +15,9 @@
     * 
     * Author: Spandan Suthar
 */
+#ifndef SD_INTERFACE_CPP
+#define SD_INTERFACE_CPP
 
-#ifndef SD_INTERFACE_
-#define SD_INTERFACE_
 #define LOG_REOPEN_ATTEMPTS 5
 #include <Arduino.h>
 #include <SD.h>
@@ -26,50 +26,11 @@
 
 #define LOG_FILE_NAME "log.csv"
 
+
 /* Pointer to the packet to read from */
 telemetry_packet *packet;
 /* File to log to */
 File logFile;
-
-void SD_Init(telemetry_packet *p){
-    /* TODO: change this to initialize a reader from flash memory 
-                the SD card is only written to after touchdown */
-    packet = p; // Initialize pointer to telemetry packet
-
-    /*---Initialize Connection to SD Card---*/
-
-    
-    if(!SD.begin(BUILTIN_SDCARD)){
-        /* TODO: update sd status in telemetry packet and let it transmit 
-        also, remove print statements*/
-        Serial.println("SD initialization failed.");
-    }
-
-    /*---Initialize file pointer for log file on SD card---*/
-
-    /* Open the log file in append mode */
-    logFile = SD.open(LOG_FILE_NAME, O_WRITE);
-    /* Check if the file was opened successfully. */
-    if(logFile) {
-        Serial.println("File opened.");
-    } else {
-        /* If not, state there was an error... */
-        Serial.print("Error opening ");
-        Serial.print(LOG_FILE_NAME);
-        Serial.println(".");
-        Serial.println("Trying again.");
-
-        /* ...and retry opening the file a #defined number of times.*/
-        if(logOpenRetry(LOG_REOPEN_ATTEMPTS))
-            Serial.println("File opened.");
-        else
-            Serial.println("Opening log file failed; giving up.");
-    }
-}
-
-void SD_Thread_Main(){
-
-}
 
 
         /* TODO: should we address buffer overflow? */
@@ -157,6 +118,49 @@ bool logOpenRetry(int n)
 }
 
 
+void SD_Init(telemetry_packet *p){
+    /* TODO: change this to initialize a reader from flash memory 
+                the SD card is only written to after touchdown */
+    packet = p; // Initialize pointer to telemetry packet
+
+    /*---Initialize Connection to SD Card---*/
+
+    
+    if(!SD.begin(BUILTIN_SDCARD)){
+        /* TODO: update sd status in telemetry packet and let it transmit 
+        also, remove print statements*/
+        Serial.println("SD initialization failed.");
+    }
+
+    /*---Initialize file pointer for log file on SD card---*/
+
+    /* Open the log file in append mode */
+    logFile = SD.open(LOG_FILE_NAME, O_WRITE);
+    /* Check if the file was opened successfully. */
+    if(logFile) {
+        Serial.println("File opened.");
+    } else {
+        /* If not, state there was an error... */
+        Serial.print("Error opening ");
+        Serial.print(LOG_FILE_NAME);
+        Serial.println(".");
+        Serial.println("Trying again.");
+
+        /* ...and retry opening the file a #defined number of times.*/
+        if(logOpenRetry(LOG_REOPEN_ATTEMPTS))
+            Serial.println("File opened.");
+        else
+            Serial.println("Opening log file failed; giving up.");
+    }
+}
+
+
+void SD_Thread_Main(){
+
+}
+
+
+
 /* Closes any open files and saves data */
 void close()
 {
@@ -177,5 +181,4 @@ void dumpLog()
 }
 
 
-#endif // SD_INTERFACE_
-
+#endif
